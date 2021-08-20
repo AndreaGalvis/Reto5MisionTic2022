@@ -1,0 +1,317 @@
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+
+class JDBCUtilities {
+    private static final String DATABASE_LOCATION = "ProyectosConstruccion.db";
+
+    public static Connection getConnection() throws SQLException {
+        String url = "jdbc:sqlite:"+DATABASE_LOCATION;
+
+        return DriverManager.getConnection(url);
+    }
+}
+
+
+class VistaRequerimientos {
+    public static final ControladorRequerimientos controlador = new ControladorRequerimientos();
+public static void requerimiento1(){
+	System.out.println("25 Proyectos Clasificados por Casa");
+	try{
+		ArrayList<Requerimiento_1> requerimiento1= controlador.consultarRequerimiento1();
+		System.out.println("Clasificación por Casa");
+		for(Requerimiento_1 req1: requerimiento1){
+			System.out.printf("%s %s %s %s %s %s %n",
+			req1.getFecha_Inicio(),
+			req1.getConstructora(),
+			req1.getCiudad(),
+			req1.getAcabados(),
+			req1.getBanco_Vinculado(),
+			req1.getSerial());
+				} 
+	} catch (Exception e) {
+		System.err.println("Ha ocurrido un error!" + e.getMessage());
+	}
+}
+
+public static void requerimiento2(){
+	System.out.println("INNER JOIN");
+	try{
+		ArrayList<Requerimiento_2> requerimiento2= controlador.consultarRequerimiento2();
+		System.out.println("Concatenacion");
+		for(Requerimiento_2 req2: requerimiento2){
+			System.out.printf("%s %s %f %s %n",
+			req2.getConstructora(),
+			req2.getCiudad(),
+			req2.getPorcentaje_Cuota_Inicial(),
+			req2.getTipo());
+				} 
+	} catch (Exception e) {
+		System.err.println(e);
+	}
+}
+
+public static void requerimiento3() {
+	System.out.println("-----Ranking Materiales-------");
+	try {
+		ArrayList<Requerimiento_3> requerimiento3= controlador.consultarRequerimiento3();
+		System.out.println("Materiales");
+		for(Requerimiento_3 req3: requerimiento3){
+			System.out.printf("%s %d %n",
+			req3.getNombre_Material(),
+			req3.getPrecio_Unidad());
+				}
+	} catch (Exception e) {
+		System.err.println(e);
+	}
+}
+}
+
+
+class ControladorRequerimientos {
+    private final Requerimiento_1Dao requerimiento_1Dao;
+    private final Requerimiento_2Dao requerimiento_2Dao;
+    private final Requerimiento_3Dao requerimiento_3Dao;
+    public ControladorRequerimientos() {
+	    this.requerimiento_1Dao = new Requerimiento_1Dao();
+	    this.requerimiento_2Dao = new Requerimiento_2Dao();
+	    this.requerimiento_3Dao = new Requerimiento_3Dao();
+}
+    public ArrayList<Requerimiento_1> consultarRequerimiento1() throws SQLException {
+	    return this.requerimiento_1Dao.requerimiento1();
+}
+    public ArrayList<Requerimiento_2> consultarRequerimiento2() throws SQLException {
+	    return this.requerimiento_2Dao.requerimiento2();
+}
+    public ArrayList<Requerimiento_3> consultarRequerimiento3() throws SQLException {
+	    return this.requerimiento_3Dao.requerimiento3();
+}
+}
+
+
+class Requerimiento_1 {
+    private String Fecha_Inicio;
+	private String Constructora;
+	private String Ciudad;
+	private String Acabados;
+	private String Banco_Vinculado;
+	private String Serial;
+
+	public Requerimiento_1() {
+	}
+	
+	public Requerimiento_1(String Fecha_Inicio, String Constructora, String Ciudad, String Acabados, String Banco_Vinculado, String Serial){
+		this.Fecha_Inicio = Fecha_Inicio;
+		this.Constructora = Constructora;
+		this.Ciudad = Ciudad;
+		this.Acabados = Acabados;
+		this.Banco_Vinculado = Banco_Vinculado;
+		this.Serial = Serial;
+	}
+	public String getFecha_Inicio(){
+		return Fecha_Inicio;
+	}
+	public void setFecha_Inicio(String fecha_Inicio){
+		this.Fecha_Inicio = fecha_Inicio;
+	}
+	public String getConstructora() {
+		return Constructora;
+	}
+	public void setConstructora(String constructora) {
+		this.Constructora = constructora;
+	}
+	public String getCiudad() {
+		return Ciudad;
+	}
+	public void setCiudad(String ciudad) {
+		this.Ciudad = ciudad;
+	}
+	public String getAcabados() {
+		return Acabados;
+	}
+	public void setAcabados(String acabados) {
+		this.Acabados = acabados;
+	}
+	public String getBanco_Vinculado() {
+		return Banco_Vinculado;
+	}
+	public void setBanco_Vinculado(String banco_Vinculado) {
+		this.Banco_Vinculado = banco_Vinculado;
+	}
+	public String getSerial() {
+		return Serial;
+	}
+	public void setSerial(String serial){
+		this.Serial = serial;
+	}
+}
+
+class Requerimiento_2 {
+    private Double Porcentaje_Cuota_Inicial;
+	private String Tipo;
+	private String Constructora;
+	private String Ciudad;
+
+	public Requerimiento_2 () {
+	}
+	
+	public Requerimiento_2(String Constructora, String Ciudad, Double Porcentaje_Cuota_Inicial, String Tipo){
+		this.Constructora = Constructora;
+		this.Ciudad = Ciudad;
+		this.Porcentaje_Cuota_Inicial = Porcentaje_Cuota_Inicial;
+		this.Tipo = Tipo;
+		
+	}
+
+	public Double getPorcentaje_Cuota_Inicial() {
+		return Porcentaje_Cuota_Inicial;
+	}
+	public void setPorcentaje_Cuota_Inicial(Double Porcentaje_Cuota_Inicial) {
+		this.Porcentaje_Cuota_Inicial = Porcentaje_Cuota_Inicial;
+	}
+	public String getTipo() {
+		return Tipo;
+	}
+	public void setTipo(String Tipo){
+		this.Tipo = Tipo;
+	}
+	public String getConstructora() {
+		return Constructora;
+	}
+	public void setConstructora(String Constructora) {
+		this.Constructora = Constructora;
+	}
+	public String getCiudad() {
+		return Ciudad;
+	}
+	public void setCiudad(String Ciudad) {
+		this.Ciudad = Ciudad;
+	}
+}
+
+class Requerimiento_3 {
+    private Integer Precio_Unidad;
+	private String Nombre_Material;
+	
+	public Requerimiento_3() {
+	}
+	public Requerimiento_3(String Nombre_Material, Integer Precio_Unidad) {
+		this.Nombre_Material = Nombre_Material;
+		this.Precio_Unidad = Precio_Unidad;
+	}
+	public String getNombre_Material() {
+		return Nombre_Material;
+	}
+	public void setNombre_Material(String Nombre_Material) {
+		this.Nombre_Material = Nombre_Material;
+	}
+	public Integer getPrecio_Unidad() {
+		return Precio_Unidad;
+	}
+	public void setPrecio_Unidad(Integer Precio_Unidad) {
+		this.Precio_Unidad = Precio_Unidad;
+	}
+}
+
+
+class Requerimiento_1Dao {
+    public ArrayList<Requerimiento_1> requerimiento1() throws SQLException {
+		ArrayList<Requerimiento_1> respuesta = new ArrayList<Requerimiento_1>();
+		Connection conexion=JDBCUtilities.getConnection();
+		try{
+			String consulta = "select Fecha_Inicio, Constructora, Ciudad, Acabados, Banco_Vinculado, Serial from Proyecto where Clasificacion = 'Casa' limit 25;";
+		
+			Statement statement=conexion.createStatement();
+			ResultSet resultSet=statement.executeQuery(consulta);
+		
+			while(resultSet.next()){
+				Requerimiento_1 requerimiento1 = new Requerimiento_1();
+				requerimiento1.setFecha_Inicio(resultSet.getString("Fecha_Inicio"));
+				requerimiento1.setConstructora(resultSet.getString("Constructora"));
+				requerimiento1.setCiudad(resultSet.getString("Ciudad"));
+				requerimiento1.setAcabados(resultSet.getString("Acabados"));
+				requerimiento1.setBanco_Vinculado(resultSet.getString("Banco_Vinculado"));
+				requerimiento1.setSerial(resultSet.getString("Serial"));
+				respuesta.add(requerimiento1);
+			}
+			resultSet.close();
+			statement.close();
+		}
+		catch (SQLException e){
+			System.err.println("Error consultando Rankind de los 25 proyecto Clasificados por casa: "+ e);
+		}finally{
+			if(conexion!= null){
+				conexion.close();
+			}
+		}
+	return respuesta;
+	}
+}
+
+class Requerimiento_2Dao {
+    public ArrayList<Requerimiento_2> requerimiento2() throws SQLException {
+		ArrayList<Requerimiento_2> respuesta = new ArrayList<Requerimiento_2>();
+		Connection conexion=JDBCUtilities.getConnection();
+		try{
+			String consulta = "select Constructora, Ciudad, Porcentaje_Cuota_Inicial, T.Area_Max ||' '|| T.Estrato as Tipo from Proyecto P INNER JOIN Tipo T on (P.ID_Tipo = T.ID_Tipo) where p.Ciudad = 'Armenia' order by T.Area_Max, T.Estrato;";
+		
+			Statement statement=conexion.createStatement();
+			ResultSet resultSet=statement.executeQuery(consulta);
+		
+			while(resultSet.next()){
+				Requerimiento_2 requerimiento2 = new Requerimiento_2();
+				requerimiento2.setConstructora(resultSet.getString("Constructora"));
+				requerimiento2.setCiudad(resultSet.getString("Ciudad"));
+				requerimiento2.setPorcentaje_Cuota_Inicial(resultSet.getDouble("Porcentaje_Cuota_Inicial"));
+				requerimiento2.setTipo(resultSet.getString("Tipo"));
+				respuesta.add(requerimiento2);
+			}
+			resultSet.close();
+			statement.close();
+		}
+		catch (SQLException e){
+			System.err.println("Error consultando Inner Join y Concatenacion: "+ e);
+		}finally{
+			if(conexion!= null){
+				conexion.close();
+			}
+		}
+	return respuesta;
+	}
+}
+
+class Requerimiento_3Dao {
+    public ArrayList<Requerimiento_3> requerimiento3() throws SQLException {
+		ArrayList<Requerimiento_3> respuesta=new ArrayList<Requerimiento_3>();
+		Connection conexion=JDBCUtilities.getConnection();
+		try{
+			String consulta = "select Nombre_Material, max(Precio_Unidad) as Max_Precio_Unidad from MaterialConstruccion group by Nombre_Material having max(Precio_Unidad)>1500;";
+		
+			Statement statement=conexion.createStatement();
+			ResultSet resultSet=statement.executeQuery(consulta);
+		
+			while(resultSet.next()){
+				Requerimiento_3 requerimiento3 = new Requerimiento_3();
+				requerimiento3.setNombre_Material(resultSet.getString("Nombre_Material"));
+				requerimiento3.setPrecio_Unidad(resultSet.getInt("Max_Precio_Unidad"));
+				respuesta.add(requerimiento3);
+			}
+			resultSet.close();
+			statement.close();
+		}
+		catch (SQLException e){
+			System.err.println("Error consultando ranking de materiales: "+ e);
+		}finally{
+			if(conexion!= null){
+				conexion.close();
+			}
+		}
+	return respuesta;
+	}
+
+}
